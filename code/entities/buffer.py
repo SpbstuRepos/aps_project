@@ -52,7 +52,7 @@ class Buffer:
     def take_request(self) -> Order:
         best_index = 0
 
-        for i in range(1, self._orders):
+        for i in range(1, self._capacity):
             order = self._orders[i]
             best_order = self._orders[best_index]
 
