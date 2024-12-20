@@ -26,7 +26,7 @@ class TaskList:
         self._list.insert(1, (timestamp, task))
 
     def schedule_task(self, task, timestamp):
-        match_index = -1
+        match_index = None
 
         for i in range(len(self._list)):
             time = self._list[i][0]
@@ -34,7 +34,10 @@ class TaskList:
                 match_index = i
                 break
 
-        self._list.insert(match_index, (timestamp, task))
+        if match_index != None:
+            self._list.insert(match_index, (timestamp, task))
+        else:
+            self._list.append((timestamp, task))
 
     def run_task(self, task, default_timestamp):
         try:
