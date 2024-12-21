@@ -11,12 +11,12 @@ class Order:
     # priority: int
     # status: str
 
-    def __init__(self, id: int, priority: int, issuer):
+    def __init__(self, id: int, priority: int, issuer, status_update_handler=None):
         self._id = id
         self._priority = priority
-        self._status_update_handler = None
-        self.status = Status.CREATED
         self._issuer = issuer
+        self._status_update_handler = status_update_handler
+        self.status = Status.CREATED
 
     @property
     def status_update_handler(self):
@@ -35,10 +35,7 @@ class Order:
         self._status = value
 
         if self.status_update_handler != None:
-            try:
-                self.status_update_handler(self)
-            except TypeError:
-                pass
+            self.status_update_handler(self)
 
     @property
     def id(self):
