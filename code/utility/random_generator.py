@@ -1,4 +1,5 @@
-from numpy.random import poisson, uniform
+from numpy.random import uniform
+from math import log
 
 
 class RandomGenerator:
@@ -9,10 +10,12 @@ class RandomGenerator:
 class PoissonGenerator(RandomGenerator):
     def __init__(self, lam):
         super().__init__()
-        self._lam = lam
+        self._lam = float(lam)
 
     def generate(self):
-        return float(poisson(self._lam))
+        r = uniform(0, 1)
+        value = -1.0 / self._lam * log(r)
+        return min(value, 50.0)
 
 
 class UniformGenerator(RandomGenerator):
