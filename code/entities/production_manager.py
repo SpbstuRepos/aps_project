@@ -10,7 +10,7 @@ class ProductionManager:
         self._lines = list(sorted(lines, key=attrgetter('id')))
 
     def is_line_available(self):
-        return any(filter(lambda line: line.is_free(), self._lines))
+        return any(map(lambda line: line.is_free(), self._lines))
 
     async def process_request(self, order: Order) -> Order:
         free_line = next(
