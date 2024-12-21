@@ -18,7 +18,7 @@ class Buffer:
         return self._count == 0
 
     def __is_full(self):
-        return self._count == self._capacity
+        return self._count == self._capacity and self._capacity != 0
 
     def __pop(self, index):
         item = self._orders[index]
@@ -36,6 +36,9 @@ class Buffer:
             order.status = Status.DROPPED
 
     def add_request(self, order):
+        if self._capacity == 0:
+            return
+
         if self.__is_full():
             self.remove_under_cursor()
 
