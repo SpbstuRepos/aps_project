@@ -23,7 +23,7 @@ class TaskList:
             front = None
 
         timestamp = front[0] if front != None else default_timestamp
-        self.schedule_task(task, timestamp + 0.0001)
+        self.schedule_task(task, timestamp + 0.1)
 
     def schedule_task(self, task, timestamp):
         match_index = None
@@ -39,14 +39,14 @@ class TaskList:
         else:
             self._list.append((timestamp, task))
 
-    def run_task(self, task, default_timestamp):
+    def long_wait_task(self, task, default_timestamp):
         try:
             back = self._list[-1]
         except IndexError:
             back = None
 
         timestamp = back[0] if back != None else default_timestamp
-        self._list.append((timestamp, task))
+        self.schedule_task(task, timestamp)
 
 
 class SimulationAsyncRuntime:
@@ -56,7 +56,7 @@ class SimulationAsyncRuntime:
 
     def create_task(self, coro):
         """Wrap a coroutine into a task and schedule it immediately."""
-        self._tasks.run_task(coro, self._timestamp)
+        self._tasks.yield_task(coro, self._timestamp)
 
     @property
     def timestamp(self):
@@ -71,6 +71,8 @@ class SimulationAsyncRuntime:
                 result = task.send(None)
                 if isinstance(result, Yield):
                     self._tasks.yield_task(task, self._timestamp)
+                if isinstance(result, LongWait):
+                    self._tasks.long_wait_task(task, self._timestamp)
                 elif isinstance(result, Sleep):
                     timestamp = self._timestamp + result.dur
                     self._tasks.schedule_task(task, timestamp)
@@ -79,6 +81,10 @@ class SimulationAsyncRuntime:
 
 
 class Yield:
+    pass
+
+
+class LongWait:
     pass
 
 
@@ -91,6 +97,12 @@ class Sleep:
 def yield_task():
     """Simulate a non-blocking sleep by yielding control back to the runtime."""
     yield Yield()
+
+
+@coroutine
+def long_wait():
+    """Schedule current task to the end of execution queue."""
+    yield LongWait()
 
 
 @coroutine
