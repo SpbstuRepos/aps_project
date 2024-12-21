@@ -35,7 +35,7 @@ class OrderManager:
         while not self._buffer.is_empty():
             await self.wait_line()
             order = self._buffer.take_request()
-            processed = self._production_manager.process_request(order)
+            processed = await self._production_manager.process_request(order)
             self._notify_client(processed)
 
         self._is_processing_buffer = False

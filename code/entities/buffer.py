@@ -29,6 +29,9 @@ class Buffer:
 
         return item
 
+    def _increment_index(self):
+        self._place_index = (self._place_index + 1) % self._capacity
+
     def remove_under_cursor(self):
         order = self.__pop(self._place_index)
 
@@ -47,10 +50,11 @@ class Buffer:
                 self._orders[self._place_index] = order
                 break
 
-            self._place_index += 1
+            self._increment_index()
 
         order.status = Status.QUEUED
-        self._place_index += 1
+        self._count += 1
+        self._increment_index()
 
     def take_request(self) -> Order:
         best_index = 0

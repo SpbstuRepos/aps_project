@@ -13,5 +13,5 @@ class Client:
         order_id = self._counter * 100 + self._id
         return Order(order_id, self._id, self)
 
-    def notify_completed(order: Order):
+    def notify_completed(self, order: Order):
         pass  # TODO: Handle completed order
