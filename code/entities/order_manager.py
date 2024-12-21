@@ -1,8 +1,8 @@
 from entities.buffer import Buffer
 from entities.client import Client
-from entities.order import Order
+from entities.order import Order, Status
 from entities.production_manager import ProductionManager
-from utility.runtime import yield_task
+from utility.runtime import yield_task, simulated_runtime
 
 
 class OrderManager:
@@ -26,19 +26,21 @@ class OrderManager:
         while not self._production_manager.is_line_available():
             await yield_task()
 
-    async def process_buffer(self):
-        if self._is_processing_buffer == True:
+    async def process_buffer(self, recursive_call=False):
+        if self._is_processing_buffer == True and not recursive_call:
             return
 
         self._is_processing_buffer = True
 
-        while not self._buffer.is_empty():
-            await self.wait_line()
-            order = self._buffer.take_request()
-            processed = await self._production_manager.process_request(order)
-            self._notify_client(processed)
+        if self._buffer.is_empty():
+            self._is_processing_buffer = False
+            return
 
-        self._is_processing_buffer = False
+        await self.wait_line()
+        order = self._buffer.take_request()
+        simulated_runtime.create_task(self.process_buffer(recursive_call=True))
+        processed = await self._production_manager.process_request(order)
+        self._notify_client(processed)
 
     def _notify_client(self, order: Order):
         client: Client = order.issuer
