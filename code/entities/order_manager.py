@@ -2,6 +2,7 @@ from entities.buffer import Buffer
 from entities.client import Client
 from entities.order import Order
 from entities.production_manager import ProductionManager
+from utility.runtime import yield_task
 
 
 class OrderManager:
@@ -13,26 +14,26 @@ class OrderManager:
         self._production_manager = production_manager
         self._is_processing_buffer = False
 
-    def process_request(self, order: Order):
+    async def process_request(self, order: Order):
         if self._production_manager.is_line_available():
-            processed = self._production_manager.process_request(order)
+            processed = await self._production_manager.process_request(order)
             self._notify_client(processed)
         else:
             self._buffer.add_request(order)
-            self.process_buffer()
+            await self.process_buffer()
 
-    def wait_line(self):
+    async def wait_line(self):
         while not self._production_manager.is_line_available():
-            pass  # TODO: yield task
+            await yield_task()
 
-    def process_buffer(self):
+    async def process_buffer(self):
         if self._is_processing_buffer == True:
             return
 
         self._is_processing_buffer = True
 
         while not self._buffer.is_empty():
-            self.wait_line()
+            await self.wait_line()
             order = self._buffer.take_request()
             processed = self._production_manager.process_request(order)
             self._notify_client(processed)
