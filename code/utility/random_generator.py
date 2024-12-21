@@ -15,7 +15,7 @@ class PoissonGenerator(RandomGenerator):
         return float(poisson(self._lam))
 
 
-class EvenGenerator(RandomGenerator):
+class UniformGenerator(RandomGenerator):
     def __init__(self, a, b):
         super().__init__()
         self._a = a
