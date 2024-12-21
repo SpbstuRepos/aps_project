@@ -40,6 +40,7 @@ class Buffer:
 
     def add_request(self, order):
         if self._capacity == 0:
+            order.status = Status.DROPPED
             return
 
         if self.__is_full():
