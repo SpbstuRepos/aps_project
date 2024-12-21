@@ -1,3 +1,4 @@
+from operator import attrgetter
 from entities.order import Order
 from entities.production_line import ProductionLine
 
@@ -6,7 +7,7 @@ class ProductionManager:
     # lines: list[ProductionLine]
 
     def __init__(self, lines: list[ProductionLine]):
-        self._lines = lines
+        self._lines = list(sorted(lines, key=attrgetter('id')))
 
     def is_line_available(self):
         return any(filter(lambda line: line.is_free(), self._lines))
