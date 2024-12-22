@@ -13,12 +13,9 @@ class Client:
         return self._id
 
     def create_order(self):
-        return self.create_order(None)
-
-    def create_order(self, status_update_handler):
         self._counter += 1
         order_id = self._counter * 100 + self._id
-        return Order(order_id, self._id, self, status_update_handler)
+        return Order(order_id, self._id, self)
 
     def notify_completed(self, order: Order):
         pass

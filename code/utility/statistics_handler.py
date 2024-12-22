@@ -1,6 +1,6 @@
-from entities.order import Order, Status
-from entities.production_line import ProductionLine
+from entities.order import Status
 from utility.runtime import simulated_runtime
+from utility.substitutes import TrackedLine, TrackedOrder
 
 
 class StatCollector:
@@ -8,7 +8,7 @@ class StatCollector:
         self._lines = {}
         self._clients = {}
 
-    def handle_order_status(self, order: Order):
+    def handle_order_status(self, order: TrackedOrder):
         client_id = order.issuer.id
 
         # Stats : (total, completed, dropped)
@@ -23,7 +23,7 @@ class StatCollector:
 
         self._clients[client_id] = stats
 
-    def handle_line_free(self, line: ProductionLine):
+    def handle_line_free(self, line: TrackedLine):
         line_id = line.id
 
         # Line stat: (total load time, last busy call time)

@@ -8,10 +8,11 @@ from utility.printer import print_clients_table, print_lines_table
 from utility.random_generator import PoissonGenerator, UniformGenerator
 from utility.runtime import simulated_runtime, yield_task, sleep
 from utility.statistics_handler import StatCollector
+from utility.substitutes import TrackedLine
 
 
 async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
-               a: int, b: int, duration: float):
+               a: int, b: int, duration: float, verbose: bool):
     """Simulates ordering system
 
     Parameters
@@ -30,6 +31,8 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
         higher bound (exclusive) of uniform distribution
     duration : float
         Simulation duration
+    verbose : bool
+        Should be simulation runtime events logged
     """
 
     poisson_gen = PoissonGenerator(lam)
@@ -39,9 +42,8 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
 
     for i in range(1, lines + 1):
         # Create line, set its handler and assign to production manager
-        p = ProductionLine(
-            i,
-            uniform_gen,
+        p = TrackedLine(
+            ProductionLine(i, uniform_gen),
             lambda l: stat_collector.handle_line_free(l)
         )
         production_list.append(p)
@@ -73,8 +75,9 @@ if __name__ == "__main__":
     a = 7
     b = 10
     duration = 400
+    verbose = False
 
     simulated_runtime.create_task(
-        main(clients, lines, buffer_capacity, lam, a, b, duration)
+        main(clients, lines, buffer_capacity, lam, a, b, duration, verbose)
     )
     simulated_runtime.run()

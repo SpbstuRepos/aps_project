@@ -5,6 +5,7 @@ from utility.random_generator import RandomGenerator
 from utility.runtime import long_wait, sleep
 from utility.runtime import simulated_runtime
 from utility.statistics_handler import StatCollector
+from utility.substitutes import TrackedOrder
 
 
 class OrderGenerator:
@@ -23,7 +24,8 @@ class OrderGenerator:
             if simulated_runtime.timestamp >= self._max_timestamp:
                 break
 
-            order = client.create_order(
+            order = TrackedOrder(
+                client.create_order(),
                 lambda o: self._stat_collector.handle_order_status(o)
             )
 
