@@ -4,6 +4,7 @@ from entities.order_manager import OrderManager
 from entities.production_line import ProductionLine
 from entities.production_manager import ProductionManager
 from utility.order_generator import OrderGenerator
+from utility.printer import print_clients_table, print_lines_table
 from utility.random_generator import PoissonGenerator, UniformGenerator
 from utility.runtime import simulated_runtime, yield_task, sleep
 from utility.statistics_handler import StatCollector
@@ -54,21 +55,24 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
         c = Client(i)
         order_gen.run(c, order_mgr)
 
+    start_timestamp = simulated_runtime.timestamp
     await sleep(duration)
     await order_gen.wait_all_orders()
+    end_timestamp = simulated_runtime.timestamp
 
-    stat_collector.get_clients_table()
-    stat_collector.get_lines_table()
-    print(simulated_runtime.timestamp)
+    print_clients_table(stat_collector.get_clients_table())
+    print_lines_table(stat_collector.get_lines_table(),
+                      end_timestamp - start_timestamp)
+
 
 if __name__ == "__main__":
     clients = 5
     lines = 3
     buffer_capacity = 100
     lam = 0.14
-    a = 5
+    a = 7
     b = 10
-    duration = 1000
+    duration = 400
 
     simulated_runtime.create_task(
         main(clients, lines, buffer_capacity, lam, a, b, duration)

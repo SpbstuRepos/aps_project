@@ -39,9 +39,7 @@ class StatCollector:
         self._lines[line_id] = stats
 
     def get_lines_table(self):
-        values = self._lines.items()
-        print(values)
+        return self._lines.items()
 
     def get_clients_table(self):
-        values = self._clients.items()
-        print(values)
+        return self._clients.items()
