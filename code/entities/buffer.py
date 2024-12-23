@@ -53,9 +53,9 @@ class Buffer:
 
             self._increment_index()
 
-        order.status = Status.QUEUED
         self._count += 1
         self._increment_index()
+        order.status = Status.QUEUED
 
     def take_request(self) -> Order:
         best_index = 0
