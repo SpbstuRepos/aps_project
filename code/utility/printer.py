@@ -23,9 +23,7 @@ def print_clients_table(table):
     print(f'Orders grouped by clients report\n{t}\n')
 
 
-def print_lines_table(table, total_time):
+def print_lines_table(table):
     t = Table(["Production Line ID", "Total work time", "Load (%)"])
-    t.add_rows(sorted((i, "%.2f" % l, "%.2f" % (100 * l / total_time))
-                      for i, (l, _) in table))
-
+    t.add_rows(sorted((i, "%.2f" % l, "%.2f" % lf) for i, l, lf in table))
     print(f'Production lines activity report\n{t}\n')

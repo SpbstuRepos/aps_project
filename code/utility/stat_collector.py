@@ -56,8 +56,13 @@ class StatCollector(StatHandler):
 
         self._lines[line_id] = stats
 
-    def get_lines_table(self):
-        return self._lines.items()
+    def get_lines_table(self, total_time):
+        table = []
+
+        for k, v in self._lines.items():
+            table.append([str(k), v[0], 100 * v[0] / total_time])
+
+        return table
 
     def get_clients_table(self):
         table = []

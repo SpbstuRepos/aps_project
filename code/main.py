@@ -71,8 +71,8 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
     end_timestamp = simulated_runtime.timestamp
 
     print_clients_table(stat_collector.get_clients_table())
-    print_lines_table(stat_collector.get_lines_table(),
-                      end_timestamp - start_timestamp)
+    print_lines_table(
+        stat_collector.get_lines_table(end_timestamp - start_timestamp))
 
 
 if __name__ == "__main__":
