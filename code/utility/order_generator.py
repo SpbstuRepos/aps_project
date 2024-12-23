@@ -1,18 +1,18 @@
 from entities.client import Client
 from entities.order import Status
 from entities.order_manager import OrderManager
+from utility.stat_handler import StatHandler
 from utility.random_generator import RandomGenerator
 from utility.runtime import long_wait, sleep
 from utility.runtime import simulated_runtime
-from utility.statistics_handler import StatCollector
 from utility.substitutes import TrackedOrder
 
 
 class OrderGenerator:
-    def __init__(self, rng: RandomGenerator, stat_collector: StatCollector, max_timestamp: float):
+    def __init__(self, rng: RandomGenerator, stat_handler: StatHandler, max_timestamp: float):
         self._rng = rng
         self._loop = True
-        self._stat_collector = stat_collector
+        self._stat_handler = stat_handler
         self._orders = []
         self._max_timestamp = max_timestamp
 
@@ -26,7 +26,7 @@ class OrderGenerator:
 
             order = TrackedOrder(
                 client.create_order(),
-                lambda o: self._stat_collector.handle_order_status(o)
+                lambda o: self._stat_handler.handle_order_status(o)
             )
 
             self._orders.append(order)

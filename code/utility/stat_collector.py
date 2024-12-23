@@ -1,10 +1,13 @@
 from entities.order import Status
 from utility.runtime import simulated_runtime
+from utility.stat_handler import StatHandler
 from utility.substitutes import TrackedLine, TrackedOrder
 
 
-class StatCollector:
+class StatCollector(StatHandler):
     def __init__(self):
+        super().__init__()
+
         self._lines = {}
         self._clients = {}
         self._orders = []
