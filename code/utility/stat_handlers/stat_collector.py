@@ -1,6 +1,6 @@
 from entities.order import Status
 from utility.runtime import simulated_runtime
-from utility.stat_handler import StatHandler
+from utility.stat_handlers.stat_handler import StatHandler
 from utility.substitutes import TrackedLine, TrackedOrder
 
 

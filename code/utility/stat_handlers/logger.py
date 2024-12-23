@@ -1,4 +1,4 @@
-from utility.stat_handler import StatHandler
+from utility.stat_handlers.stat_handler import StatHandler
 from utility.substitutes import TrackedLine, TrackedOrder
 
 

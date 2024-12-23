@@ -1,7 +1,7 @@
 from entities.client import Client
 from entities.order import Status
 from entities.order_manager import OrderManager
-from utility.stat_handler import StatHandler
+from utility.stat_handlers.stat_handler import StatHandler
 from utility.random_generator import RandomGenerator
 from utility.runtime import long_wait, sleep
 from utility.runtime import simulated_runtime

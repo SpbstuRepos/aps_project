@@ -3,13 +3,13 @@ from entities.client import Client
 from entities.order_manager import OrderManager
 from entities.production_line import ProductionLine
 from entities.production_manager import ProductionManager
-from utility.logger import Logger
+from utility.stat_handlers.logger import Logger
 from utility.order_generator import OrderGenerator
 from utility.printer import print_clients_table, print_lines_table
 from utility.random_generator import PoissonGenerator, UniformGenerator
 from utility.runtime import simulated_runtime, yield_task, sleep
-from utility.stat_collector import StatCollector
-from utility.stat_handler import AggregateStatHandler
+from utility.stat_handlers.stat_collector import StatCollector
+from utility.stat_handlers.stat_handler import AggregateStatHandler
 from utility.substitutes import TrackedLine
 
 
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     a = 7
     b = 10
     duration = 100000
-    verbose = False
+    verbose = True
 
     simulated_runtime.create_task(
         main(clients, lines, buffer_capacity, lam, a, b, duration, verbose)
