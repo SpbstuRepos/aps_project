@@ -14,6 +14,9 @@ class AggregateStatHandler(StatHandler):
         super().__init__()
         self._handlers = list(handlers)
 
+    def add_handler(self, handler: StatHandler):
+        self._handlers.append(handler)
+
     def handle_order_status(self, order: TrackedOrder):
         for handler in self._handlers:
             handler.handle_order_status(order)

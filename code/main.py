@@ -38,15 +38,17 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
     """
 
     poisson_gen = PoissonGenerator(lam)
+    client_list = []
     uniform_gen = UniformGenerator(a, b)
     production_list = []
+    buffer = Buffer(buffer_capacity)
+
+    for i in range(1, clients + 1):
+        c = Client(i)
+        client_list.append(c)
+
     stat_collector = StatCollector()
-    handlers = [stat_collector]
-
-    if verbose:
-        handlers.append(Logger())
-
-    stat_handler = AggregateStatHandler(handlers)
+    stat_handler = AggregateStatHandler([stat_collector])
 
     for i in range(1, lines + 1):
         # Create line, set its handler and assign to production manager
@@ -56,13 +58,14 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
         )
         production_list.append(p)
 
-    buffer = Buffer(buffer_capacity)
     production_mgr = ProductionManager(production_list)
     order_mgr = OrderManager(buffer, production_mgr)
     order_gen = OrderGenerator(poisson_gen, stat_handler, duration)
 
-    for i in range(1, clients + 1):
-        c = Client(i)
+    if verbose:
+        stat_handler.add_handler(Logger(client_list, buffer, production_mgr))
+
+    for c in client_list:
         order_gen.run(c, order_mgr)
 
     start_timestamp = simulated_runtime.timestamp
@@ -78,11 +81,11 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
 if __name__ == "__main__":
     clients = 5
     lines = 5
-    buffer_capacity = 100
+    buffer_capacity = 10
     lam = 0.14
     a = 7
-    b = 10
-    duration = 100000
+    b = 9
+    duration = 10000
     verbose = True
 
     simulated_runtime.create_task(

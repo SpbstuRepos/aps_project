@@ -10,6 +10,7 @@ class ProductionLine:
     def __init__(self, id: int, rng: RandomGenerator):
         self._id = id
         self._free = True
+        self._order = None
         self._rng = rng
 
     def is_free(self):
@@ -36,8 +37,10 @@ class ProductionLine:
             raise Exception("Attempt to load nonfree line")
 
         self._free = False
+        self._order = order
         order.status = Status.PROCESSING
         await self._process_internal()
+        self._order = None
         self._free = True
         order.status = Status.COMPLETED
 
