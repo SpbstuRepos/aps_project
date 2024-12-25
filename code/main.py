@@ -7,14 +7,14 @@ from utility.stat_handlers.logger import Logger
 from utility.order_generator import OrderGenerator
 from utility.printer import print_clients_table, print_lines_table
 from utility.random_generator import PoissonGenerator, UniformGenerator
-from utility.runtime import simulated_runtime, yield_task, sleep
+from utility.runtime import simulated_runtime
 from utility.stat_handlers.stat_collector import StatCollector
 from utility.stat_handlers.stat_handler import AggregateStatHandler
 from utility.substitutes import TrackedLine
 
 
 async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
-               a: int, b: int, duration: float, verbose: bool):
+               a: int, b: int, max_orders: int, verbose: bool):
     """Simulates ordering system
 
     Parameters
@@ -31,8 +31,8 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
         lower bound (inclusive) of uniform distribution
     b : int
         higher bound (exclusive) of uniform distribution
-    duration : float
-        Simulation duration
+    max_orders : int
+        Total order count
     verbose : bool
         Should be simulation runtime events logged
     """
@@ -60,7 +60,7 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
 
     production_mgr = ProductionManager(production_list)
     order_mgr = OrderManager(buffer, production_mgr)
-    order_gen = OrderGenerator(poisson_gen, stat_handler, duration)
+    order_gen = OrderGenerator(poisson_gen, stat_handler, max_orders)
 
     if verbose:
         stat_handler.add_handler(Logger(client_list, buffer, production_mgr))
@@ -69,7 +69,6 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
         order_gen.run(c, order_mgr)
 
     start_timestamp = simulated_runtime.timestamp
-    await sleep(duration)
     await order_gen.wait_all_orders()
     end_timestamp = simulated_runtime.timestamp
 
@@ -85,10 +84,10 @@ if __name__ == "__main__":
     lam = 0.14
     a = 7
     b = 9
-    duration = 10000
+    max_orders = 10000
     verbose = True
 
     simulated_runtime.create_task(
-        main(clients, lines, buffer_capacity, lam, a, b, duration, verbose)
+        main(clients, lines, buffer_capacity, lam, a, b, max_orders, verbose)
     )
     simulated_runtime.run()
