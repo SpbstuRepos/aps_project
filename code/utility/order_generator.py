@@ -18,7 +18,6 @@ class OrderGenerator:
 
     async def _generate(self, client: Client, order_manager: OrderManager):
         while self._loop:
-            
             time = self._rng.generate()
             await sleep(time)
 
