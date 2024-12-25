@@ -18,11 +18,11 @@ class OrderGenerator:
 
     async def _generate(self, client: Client, order_manager: OrderManager):
         while self._loop:
-            time = self._rng.generate()
-            await sleep(time)
-
             if len(self._orders) >= self._max_orders:
                 break
+            
+            time = self._rng.generate()
+            await sleep(time)
 
             order = TrackedOrder(
                 client.create_order(),
