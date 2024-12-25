@@ -78,14 +78,14 @@ async def main(clients: int, lines: int, buffer_capacity: int, lam: int,
 
 
 if __name__ == "__main__":
-    clients = 5
+    clients = 4
     lines = 5
     buffer_capacity = 10
     lam = 0.14
-    a = 7
-    b = 9
-    max_orders = 10000
-    verbose = True
+    a = 8
+    b = 10
+    max_orders = 2500
+    verbose = False
 
     simulated_runtime.create_task(
         main(clients, lines, buffer_capacity, lam, a, b, max_orders, verbose)

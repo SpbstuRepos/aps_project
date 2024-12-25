@@ -62,7 +62,7 @@ def fmt_prod_manager(prod: ProductionManager):
 
 
 def fmt_clients(clients):
-    t = Table(["Line ID", "Order count", "Dropped (%)"])
+    t = Table(["Client ID", "Order count", "Dropped (%)"])
 
     for k, v in clients.items():
         index = k
