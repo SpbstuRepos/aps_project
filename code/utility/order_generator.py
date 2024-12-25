@@ -9,19 +9,19 @@ from utility.substitutes import TrackedOrder
 
 
 class OrderGenerator:
-    def __init__(self, rng: RandomGenerator, stat_handler: StatHandler, max_timestamp: float):
+    def __init__(self, rng: RandomGenerator, stat_handler: StatHandler, max_orders: int):
         self._rng = rng
         self._loop = True
         self._stat_handler = stat_handler
         self._orders = []
-        self._max_timestamp = max_timestamp
+        self._max_orders = max_orders
 
     async def _generate(self, client: Client, order_manager: OrderManager):
         while self._loop:
             time = self._rng.generate()
             await sleep(time)
 
-            if simulated_runtime.timestamp >= self._max_timestamp:
+            if len(self._orders) >= self._max_orders:
                 break
 
             order = TrackedOrder(
@@ -41,6 +41,9 @@ class OrderGenerator:
 
         while not success:
             success = True
+
+            if len(self._orders) < self._max_orders:
+                success = False
 
             for order in self._orders:
                 if order.status not in [Status.DROPPED, Status.COMPLETED]:
