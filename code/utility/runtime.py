@@ -23,7 +23,7 @@ class TaskList:
             front = None
 
         timestamp = front[0] if front != None else default_timestamp
-        self.schedule_task(task, timestamp + 0.001)
+        self.schedule_task(task, timestamp + 0.00001)
 
     def schedule_task(self, task, timestamp):
         match_index = None

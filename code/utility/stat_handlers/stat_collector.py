@@ -102,32 +102,32 @@ class StatCollector(StatHandler):
             sum(i for _, (_, _, i) in self._clients.items()),
         )
 
-        row = [
-            "System", t_totl,
-            t_comp, 100 * t_comp / t_totl,
-            t_drop, 100 * t_drop / t_totl,
-            0, 0,
-            0, 0,
-            0, 0
-        ]
+        # row = [
+        #     "System", t_totl,
+        #     t_comp, 100 * t_comp / t_totl,
+        #     t_drop, 100 * t_drop / t_totl,
+        #     0, 0,
+        #     0, 0,
+        #     0, 0
+        # ]
 
-        completed_orders = list(
-            filter(lambda o: o.status == Status.COMPLETED, self._orders)
-        )
+        # completed_orders = list(
+        #     filter(lambda o: o.status == Status.COMPLETED, self._orders)
+        # )
 
-        row[6], row[7] = self.get_avg_and_disp(
-            map(lambda o: o.finalized_at - o.created_at, completed_orders)
-        )
+        # row[6], row[7] = self.get_avg_and_disp(
+        #     map(lambda o: o.finalized_at - o.created_at, completed_orders)
+        # )
 
-        row[8], row[9] = self.get_avg_and_disp(
-            map(lambda o: o.extracted_at - o.created_at, completed_orders)
-        )
+        # row[8], row[9] = self.get_avg_and_disp(
+        #     map(lambda o: o.extracted_at - o.created_at, completed_orders)
+        # )
 
-        row[10], row[11] = self.get_avg_and_disp(
-            map(lambda o: o.finalized_at - o.extracted_at, completed_orders)
-        )
+        # row[10], row[11] = self.get_avg_and_disp(
+        #     map(lambda o: o.finalized_at - o.extracted_at, completed_orders)
+        # )
 
-        table.append(row)
+        # table.append(row)
         return table
 
     def get_avg_and_disp(self, sequence):
@@ -140,6 +140,6 @@ class StatCollector(StatHandler):
             summ += item
             summ2 += item * item
 
-        avg = summ / count
-        avg2 = summ2 / count
+        avg = (summ / count) if count != 0 else 0
+        avg2 = (summ2 / count) if count != 0 else 0
         return avg, avg2 - avg*avg
