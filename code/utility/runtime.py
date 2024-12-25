@@ -56,7 +56,7 @@ class SimulationAsyncRuntime:
 
     def create_task(self, coro):
         """Wrap a coroutine into a task and schedule it immediately."""
-        self._tasks.yield_task(coro, self._timestamp)
+        self._tasks.schedule_task(coro, self._timestamp)
 
     @property
     def timestamp(self):
